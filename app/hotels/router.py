@@ -6,7 +6,8 @@ from fastapi_cache.decorator import cache
 
 from app.hotels.schemas import SHotels, SHotelsLocation
 from app.hotels.dao import HotelDAO
-from app.exeptions import HotelIsNotExistException
+from app.exeptions import HotelIsNotExistException, DateToGradeThenDateFromException, \
+    InvalidBookingTimeException
 
 router = APIRouter(
     prefix="/hotels",
@@ -15,12 +16,17 @@ router = APIRouter(
 
 
 @router.get("/{location}")
-@cache(expire=30)
+# @cache(expire=30)
 async def get_hotels(
         location: str,
         date_from: date = Query(..., description=f"Например: {date.today()}"),
         date_to: date = Query(..., description=f"Например: {date.today() + timedelta(days=14)}")
 ) -> list[SHotelsLocation]:
+    if date_from >= date_to:
+        raise DateToGradeThenDateFromException
+    elif date_to - date_from > timedelta(days=30):
+        raise InvalidBookingTimeException
+
     hotels = await HotelDAO.get_hotels(
         location=location,
         date_from=date_from,

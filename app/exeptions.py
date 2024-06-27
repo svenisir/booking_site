@@ -63,3 +63,13 @@ class BookingsIsNotExistForThisUserException(BookingException):
 class BookingIsDeleteException(BookingException):
     status_code = status.HTTP_204_NO_CONTENT
     detail = "Бронь успешно удалена" 
+
+
+class DateToGradeThenDateFromException(BookingException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    detail = "Дата заезда позже даты выезда"
+
+
+class InvalidBookingTimeException(BookingException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    detail = "Разница между датой заезда и датой выезда более 30 дней"

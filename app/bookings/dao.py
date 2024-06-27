@@ -54,11 +54,10 @@ class BookingDAO(BaseDAO):
     async def find_all_by_user_id(cls, user_id):
         async with async_session_maker() as session:
             get_bookings = select(
-                Bookings.room_id, Bookings.user_id, Bookings.date_from,
-                Bookings.date_to, Bookings.price, Bookings.total_cost,
-                Bookings.total_days,
-                Rooms.image_id, Rooms.name, Rooms.description,
-                Rooms.services
+                Bookings.id, Bookings.room_id, Bookings.user_id,
+                # Bookings.date_from, Bookings.date_to, Bookings.price,
+                # Bookings.total_cost, Bookings.total_days, Rooms.image_id,
+                # Rooms.name, Rooms.description, Rooms.services
             ).select_from(Bookings).join(
                 Rooms, Bookings.room_id == Rooms.id, isouter=True
             ).where(Bookings.user_id == user_id)

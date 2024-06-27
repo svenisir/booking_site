@@ -1,6 +1,7 @@
+from typing import Union
 from datetime import date
 
-from pydantic import BaseModel, ConfigDict, JsonValue
+from pydantic import BaseModel, ConfigDict, JsonValue, StrictStr
 
 
 class SBooking(BaseModel):
@@ -17,6 +18,7 @@ class SBooking(BaseModel):
 
 
 class SBookingForUser(BaseModel):
+    id: int
     room_id: int
     user_id: int
     date_from: date
@@ -26,7 +28,7 @@ class SBookingForUser(BaseModel):
     total_days: int
     image_id: int
     name: str
-    description: str
+    description: Union[str, None]
     services: JsonValue
 
     model_config = ConfigDict(from_attributes=True)

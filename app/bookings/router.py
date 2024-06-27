@@ -1,10 +1,10 @@
-
-from datetime import date
+from datetime import date, timedelta
 from app.bookings.dao import BookingDAO
 from app.bookings.schemas import SBookingForUser, SBooking
 from app.users.dependencies import get_current_user
 from app.users.models import Users
-from app.exeptions import RoomCannotBeBooked, BookingsIsNotExistForThisUserException, BookingIsDeleteException
+from app.exeptions import RoomCannotBeBooked, BookingsIsNotExistForThisUserException, \
+    BookingIsDeleteException, DateToGradeThenDateFromException, InvalidBookingTimeException
 from app.tasks.tasks import send_booking_confirmation_email
 
 from fastapi import APIRouter, Depends, Response
@@ -26,6 +26,11 @@ async def add_booking(
         room_id: int, date_from: date, date_to: date,
         user: Users = Depends(get_current_user),
 ) -> SBooking:
+    if date_from >= date_to:
+        raise DateToGradeThenDateFromException
+    elif date_to - date_from > timedelta(days=30):
+        raise InvalidBookingTimeException
+
     booking = await BookingDAO.add(user.id, room_id, date_from, date_to)
 
     if not booking:

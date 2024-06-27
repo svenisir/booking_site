@@ -22,7 +22,7 @@ class BaseDAO:
                 cls.model.__table__.columns
             ).filter_by(**filter_by)
             result: ChunkedIteratorResult = await session.execute(query)
-            return result.one_or_none()
+            return result.mappings().one_or_none()
 
     @classmethod
     async def find_all(cls, **filter_by):
