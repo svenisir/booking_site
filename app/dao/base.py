@@ -1,4 +1,4 @@
-from sqlalchemy import select, insert, delete, ChunkedIteratorResult
+from sqlalchemy import ChunkedIteratorResult, delete, insert, select
 
 from app.database import async_session_maker
 

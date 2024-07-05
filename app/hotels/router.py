@@ -1,13 +1,15 @@
-import asyncio
 from datetime import date, timedelta
 
 from fastapi import APIRouter, Query
 from fastapi_cache.decorator import cache
 
-from app.hotels.schemas import SHotels, SHotelsLocation
+from app.exeptions import (
+    DateToGradeThenDateFromException,
+    HotelIsNotExistException,
+    InvalidBookingTimeException,
+)
 from app.hotels.dao import HotelDAO
-from app.exeptions import HotelIsNotExistException, DateToGradeThenDateFromException, \
-    InvalidBookingTimeException
+from app.hotels.schemas import SHotels, SHotelsLocation
 
 router = APIRouter(
     prefix="/hotels",
@@ -16,7 +18,7 @@ router = APIRouter(
 
 
 @router.get("/{location}")
-# @cache(expire=30)
+@cache(expire=30)
 async def get_hotels(
         location: str,
         date_from: date = Query(..., description=f"Например: {date.today()}"),

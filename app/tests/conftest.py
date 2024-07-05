@@ -1,19 +1,18 @@
-import json
 import asyncio
+import json
 from datetime import datetime
 
 import pytest
-from _pytest.fixtures import SubRequest
+from fastapi.testclient import TestClient
 from httpx import AsyncClient
 from sqlalchemy import insert
-from fastapi.testclient import TestClient
 
-from app.main import app as fastapi_app
-from app.database import Base, async_session_maker, engine
-from app.config import settings
 from app.bookings.models import Bookings
+from app.config import settings
+from app.database import Base, async_session_maker, engine
 from app.hotels.models import Hotels
 from app.hotels.rooms.models import Rooms
+from app.main import app as fastapi_app
 from app.users.models import Users
 
 
@@ -66,7 +65,7 @@ async def ac():
 
 
 @pytest.fixture(scope="session")
-async def authenticated_ac(request: SubRequest):
+async def authenticated_ac():
     async with AsyncClient(app=fastapi_app, base_url="http://test") as ac:
         await ac.post("/auth/login", json={
             "email": "test@test.com",

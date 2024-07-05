@@ -1,5 +1,5 @@
-from typing import Union
 from datetime import date
+from typing import Union
 
 from pydantic import BaseModel, ConfigDict, JsonValue, StrictStr
 

@@ -1,6 +1,6 @@
-from sqlalchemy import String, Column, Integer
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.dialects.postgresql import ENUM
+from sqlalchemy.orm import relationship
 
 from app.database import Base
 from app.users.enums import UserRole

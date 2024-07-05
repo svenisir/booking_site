@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict, JsonValue, Field
+from pydantic import BaseModel, ConfigDict, Field, JsonValue
 
 
 class SHotels(BaseModel):

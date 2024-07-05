@@ -22,16 +22,22 @@ async def test_add_and_get_booking(room_id, date_from, date_to, booked_rooms,
     assert len(response.json()) == booked_rooms
 
 
-async def test_get_and_delete_booking(authenticated_ac: AsyncClient):
+@pytest.mark.parametrize("email, password", [
+    ("test@test.com", "test"),
+    ("artem@example.com", "artem")
+])
+async def test_get_and_delete_booking(email, password, authenticated_ac: AsyncClient):
+    await authenticated_ac.post("/auth/login", json={
+            "email": email,
+            "password": password,
+        })
+
     response = await authenticated_ac.get("/bookings")
 
     assert response.status_code == 200
 
     bookings = response.json()
     for booking in bookings:
-        print(booking)
-        # response = await authenticated_ac.get(f"/bookings/{booking['id']}", params={
-        #     "booking_id": booking['id']
-        # })
+        response = await authenticated_ac.delete(f"/bookings/{booking['id']}")
 
         assert response.status_code == 204

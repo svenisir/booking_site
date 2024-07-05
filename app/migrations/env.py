@@ -1,20 +1,18 @@
-import alembic_postgresql_enum
 import sys
 from logging.config import fileConfig
 from os.path import abspath, dirname
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
+import alembic_postgresql_enum
 from alembic import context
+from sqlalchemy import engine_from_config, pool
 
 sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
 
-from app.database import Base, DATABASE_URL
-from app.hotels.models import Hotels
-from app.rooms.models import Rooms
-from app.users.models import Users
-from app.bookings.models import Bookings
+from app.bookings.models import Bookings  # noqa
+from app.database import DATABASE_URL, Base
+from app.hotels.models import Hotels  # noqa
+from app.hotels.rooms.models import Rooms  # noqa
+from app.users.models import Users  # noqa
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

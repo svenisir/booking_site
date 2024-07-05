@@ -73,3 +73,8 @@ class DateToGradeThenDateFromException(BookingException):
 class InvalidBookingTimeException(BookingException):
     status_code = status.HTTP_400_BAD_REQUEST
     detail = "Разница между датой заезда и датой выезда более 30 дней"
+
+
+class InvalidDataFormatException(BookingException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    detail = "Неверный формат данных"

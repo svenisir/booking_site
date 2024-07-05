@@ -3,4 +3,5 @@ venv
 __pycache__/
 .mypy_cache/
 .idea/
-.pytest_cache 
+.pytest_cache
+.env-non-dev

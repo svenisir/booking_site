@@ -1,14 +1,21 @@
 from datetime import date, timedelta
-from app.bookings.dao import BookingDAO
-from app.bookings.schemas import SBookingForUser, SBooking
-from app.users.dependencies import get_current_user
-from app.users.models import Users
-from app.exeptions import RoomCannotBeBooked, BookingsIsNotExistForThisUserException, \
-    BookingIsDeleteException, DateToGradeThenDateFromException, InvalidBookingTimeException
-from app.tasks.tasks import send_booking_confirmation_email
 
 from fastapi import APIRouter, Depends, Response
+from fastapi_versioning import version
 from pydantic import parse_obj_as
+
+from app.bookings.dao import BookingDAO
+from app.bookings.schemas import SBooking, SBookingForUser
+from app.exeptions import (
+    BookingIsDeleteException,
+    BookingsIsNotExistForThisUserException,
+    DateToGradeThenDateFromException,
+    InvalidBookingTimeException,
+    RoomCannotBeBooked,
+)
+from app.tasks.tasks import send_booking_confirmation_email
+from app.users.dependencies import get_current_user
+from app.users.models import Users
 
 router = APIRouter(
     prefix="/bookings",
@@ -17,11 +24,16 @@ router = APIRouter(
 
 
 @router.get("")
+@version(1)
 async def get_bookings(user: Users = Depends(get_current_user)) -> list[SBookingForUser]:
-    return await BookingDAO.find_all_by_user_id(user_id=user.id)
+    bookings = await BookingDAO.find_all_by_user_id(user_id=user.id)
+    if not bookings:
+        raise BookingsIsNotExistForThisUserException
+    return bookings 
 
 
 @router.post("")
+@version(1)
 async def add_booking(
         room_id: int, date_from: date, date_to: date,
         user: Users = Depends(get_current_user),
@@ -43,6 +55,7 @@ async def add_booking(
 
 
 @router.delete("/{booking_id}")
+@version(1)
 async def delete_booking(
         response: Response,
         booking_id: int,
